@@ -13,21 +13,16 @@ if [ -n "${EXTENSIONS_DIR}" ]; then
   mkdir -p "${EXTENSIONS_DIR}"
 fi
 
+# Set trusted domains argument
+TRUSTED_DOMAINS_ARG=""
+if [ -n "${TRUSTED_DOMAINS}" ]; then
+  TRUSTED_DOMAINS_ARG="--link-protection-trusted-domains=${TRUSTED_DOMAINS}"
+fi
+
 function run_code_server() {
   echo "👷 Running code-server in the background..."
   echo "Check logs at ${LOG_PATH}!"
-
-  # Build trusted domains argument if domains are provided
-  TRUSTED_DOMAINS_ARG=""
-  if [ -n "${TRUSTED_DOMAINS}" ]; then
-    TRUSTED_DOMAINS_ARG="--link-protection-trusted-domains=${TRUSTED_DOMAINS}"
-  fi
-
-  if [ -n "$TRUSTED_DOMAINS_ARG" ]; then
-    $CODE_SERVER $EXTENSION_ARG $TRUSTED_DOMAINS_ARG --auth none --port "${PORT}" --app-name "${APP_NAME}" > "${LOG_PATH}" 2>&1 &
-  else
-    $CODE_SERVER $EXTENSION_ARG --auth none --port "${PORT}" --app-name "${APP_NAME}" > "${LOG_PATH}" 2>&1 &
-  fi
+  $CODE_SERVER $EXTENSION_ARG $TRUSTED_DOMAINS_ARG --auth none --port "${PORT}" --app-name "${APP_NAME}" > "${LOG_PATH}" 2>&1 &
 }
 
 # Check if the settings file exists...
