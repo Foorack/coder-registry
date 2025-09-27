@@ -48,3 +48,31 @@ run "url_with_folder_query" {
     error_message = "coder_app URL must include encoded folder query param"
   }
 }
+
+run "trusted_domains_empty" {
+  command = plan
+
+  variables {
+    agent_id        = "foo"
+    trusted_domains = []
+  }
+
+  assert {
+    condition     = !can(regex("CODE_SERVER.*--link-protection-trusted-domains", resource.coder_script.code-server.script))
+    error_message = "Empty trusted_domains should not include --link-protection-trusted-domains option in command execution"
+  }
+}
+
+run "trusted_domains_with_values" {
+  command = plan
+
+  variables {
+    agent_id        = "foo"
+    trusted_domains = ["example.com", "trusted.org"]
+  }
+
+  assert {
+    condition     = can(regex("TRUSTED_DOMAINS_ARG=\"--link-protection-trusted-domains=example\\.com,trusted\\.org\"", resource.coder_script.code-server.script))
+    error_message = "trusted_domains should include --link-protection-trusted-domains option with correct domains in command execution"
+  }
+}
