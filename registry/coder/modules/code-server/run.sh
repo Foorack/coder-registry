@@ -20,7 +20,7 @@ if [ -n "${TRUSTED_DOMAINS}" ]; then
   IFS=',' read -r -a DOMAINS_ARRAY <<< "${TRUSTED_DOMAINS}"
   for domain in "${DOMAINS_ARRAY[@]}"; do
     if [ -n "$domain" ]; then
-      TRUSTED_DOMAINS_ARG="$TRUSTED_DOMAINS_ARG --link-protection-trusted-domains=$domain"
+      TRUSTED_DOMAINS_ARG="$TRUSTED_DOMAINS_ARG --link-protection-trusted-domains=${domain}"
     fi
   done
 fi
