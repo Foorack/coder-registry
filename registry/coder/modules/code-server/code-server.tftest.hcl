@@ -56,6 +56,11 @@ run "trusted_domains_single" {
     agent_id        = "foo"
     trusted_domains = ["example.com"]
   }
+
+  assert {
+    condition     = can(regex("example.com", resource.coder_script.code-server.script))
+    error_message = "Script must contain the trusted domain 'example.com'"
+  }
 }
 
 run "trusted_domains_multiple" {
@@ -65,6 +70,11 @@ run "trusted_domains_multiple" {
     agent_id        = "foo"
     trusted_domains = ["example.com", "test.com", "trusted.domain.com"]
   }
+
+  assert {
+    condition     = can(regex("example.com,test.com,trusted.domain.com", resource.coder_script.code-server.script))
+    error_message = "Script must contain the comma-separated trusted domains 'example.com,test.com,trusted.domain.com'"
+  }
 }
 
 run "trusted_domains_empty" {
@@ -73,5 +83,10 @@ run "trusted_domains_empty" {
   variables {
     agent_id        = "foo"
     trusted_domains = []
+  }
+
+  assert {
+    condition     = can(regex("TRUSTED_DOMAINS_ARG=\"\"", resource.coder_script.code-server.script))
+    error_message = "Script must set TRUSTED_DOMAINS_ARG to empty string when no domains are provided"
   }
 }
