@@ -48,3 +48,30 @@ run "url_with_folder_query" {
     error_message = "coder_app URL must include encoded folder query param"
   }
 }
+
+run "trusted_domains_single" {
+  command = plan
+
+  variables {
+    agent_id        = "foo"
+    trusted_domains = ["example.com"]
+  }
+}
+
+run "trusted_domains_multiple" {
+  command = plan
+
+  variables {
+    agent_id        = "foo"
+    trusted_domains = ["example.com", "test.com", "trusted.domain.com"]
+  }
+}
+
+run "trusted_domains_empty" {
+  command = plan
+
+  variables {
+    agent_id        = "foo"
+    trusted_domains = []
+  }
+}
